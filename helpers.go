@@ -2,13 +2,10 @@ package main
 
 import (
 	"encoding/binary"
-	"fmt"
-	"strings"
-	"path/filepath"
 	"os"
 	"os/user"
-
-	"github.com/ethereum/go-ethereum/common"
+	"path/filepath"
+	"strings"
 )
 
 func expandPath(p string) (string, error) {

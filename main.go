@@ -9,9 +9,7 @@ import (
 	"math/big"
 	"os"
 	"path/filepath"
-	"sort"
 
-	"github.com/0xKiwi/go-merkle-distributor/web3"
 	"github.com/ethereum/go-ethereum/common"
 )
 
@@ -23,33 +21,13 @@ var savedDataFileName = filepath.Join("output", "saved-balances-and-supply.json"
 var addrToClaimFileName = filepath.Join("output", "addr-to-claim.json")
 
 var (
-	jsonFile = flag.String("json-file", "", "Text to parse.")
-	metricPtr = flag.String("metric", "chars", "Metric {chars|words|lines};.")
-	uniquePtr = flag.Bool("unique", false, "Measure unique values of a metric.")
+	jsonFile = flag.String("json-file", "", "JSON file of addresses to balances in wei")
 )
 
 func main() {
 	flag.Parse()
 	
-	//// Create an array of data and sort, to display top holders.
-	//balArray := make([]*tokenHolder, len(balances))
-	//var i int
-	//for k, v := range balances {
-	//	balArray[i] = &tokenHolder{
-	//		addr: k,
-	//		balance: nineTenths(v),
-	//	}
-	//	i++
-	//}
-	//sort.Slice(balArray,  func(i, j int) bool {
-	//	return balArray[i].balance.Cmp(balArray[j].balance) > 0
-	//})
-	//fmt.Printf("Top 1 holder: %s, addr %s\n", balArray[0].balance.String(), balArray[0].addr.String())
-	//fmt.Printf("Top 2 holder: %s, addr %s\n", balArray[1].balance.String(), balArray[1].addr.String())
-	//fmt.Printf("Top 3 holder: %s, addr %s\n", balArray[2].balance.String(), balArray[2].addr.String())
-	//fmt.Printf("Top 4 holder: %s, addr %s\n", balArray[3].balance.String(), balArray[3].addr.String())
-	//fmt.Printf("Top 5 holder: %s, addr %s\n", balArray[4].balance.String(), balArray[4].addr.String())
-	fullPath, err := expandPath(jsonFile)
+	fullPath, err := expandPath(*jsonFile)
 	if err != nil {
 		log.Fatalf("Could not expand path: %v", err)
 	}
@@ -71,11 +49,11 @@ func main() {
 		}
 		balArray[i] = &TokenHolder{
 			addr: common.HexToAddress(addr),
-			bal: bigInt,
+			balance: bigInt,
 		}
 		i++
 	}
-	addrToClaim, err := CreateDistributionTree(balArray)
+	_, addrToClaim, err := CreateDistributionTree(balArray)
 	if err != nil {
 		log.Fatalf("Could not create distribution tree: %v", err)
 	}

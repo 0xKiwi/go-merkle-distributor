@@ -16,7 +16,7 @@ type TokenHolder struct {
 	balance *big.Int
 }
 
-type user struct {
+type userInfo struct {
 	index uint64
 	account common.Address
 	amount *big.Int
@@ -32,9 +32,9 @@ func CreateDistributionTree(holderArray []*TokenHolder) (*solTree.MerkleTree, ma
 	sort.Slice(holderArray,  func(i, j int) bool {
 		return holderArray[i].balance.Cmp(holderArray[j].balance) > 0
 	})
-	elements := make([]*user, len(holderArray))
+	elements := make([]*userInfo, len(holderArray))
 	for i, holder := range holderArray {
-		elements[i] = &user{
+		elements[i] = &userInfo{
 			index: uint64(i),
 			account: holder.addr,
 			amount: holder.balance,
