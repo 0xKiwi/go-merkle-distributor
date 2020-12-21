@@ -22,13 +22,9 @@ var erc20ABIFileName = filepath.Join("..", "abi", "IERC20.json")
 var zeroAddr = common.HexToAddress("0x0000000000000000000000000000000000000000")
 var deadAddr = common.HexToAddress("0x000000000000000000000000000000000000dead")
 
-type LogTransfer struct {
-	From   common.Address
-	To     common.Address
-	Tokens *big.Int
-}
-
-func BalancesAndSupplyAtBlock(client *ethclient.Client, address common.Address, startBlock int64, endBlock int64) (map[common.Address]*big.Int, *big.Int, error) {
+// BalancesAndSupplyAtBlock takes in a go-ethereum client, token address and traces 
+// through transfer logs from the startBlock, to the endBlock.
+func BalancesAndSupplyAtBlock(client *ethclient.Client, tokenAddress common.Address, startBlock int64, endBlock int64) (map[common.Address]*big.Int, *big.Int, error) {
 	var totalLogs []types.Log
 	for i := startBlock; i < endBlock; i+=2000 {
 		epochEnd := i+1999
@@ -40,7 +36,7 @@ func BalancesAndSupplyAtBlock(client *ethclient.Client, address common.Address, 
 			FromBlock: big.NewInt(i),
 			ToBlock:   big.NewInt(epochEnd),
 			Addresses: []common.Address{
-				address,
+				tokenAddress,
 			},
 		}
 		logs, err := client.FilterLogs(context.Background(), query)
@@ -58,6 +54,12 @@ func BalancesAndSupplyAtBlock(client *ethclient.Client, address common.Address, 
 		return nil, nil, err
 	}
 
+	type logTransfer struct {
+		From   common.Address
+		To     common.Address
+		Tokens *big.Int
+	}
+
 	balances := make(map[common.Address]*big.Int)
 	logTransferSig := []byte("Transfer(address,address,uint256)")
 	logTransferSigHash := crypto.Keccak256Hash(logTransferSig)
@@ -65,7 +67,7 @@ func BalancesAndSupplyAtBlock(client *ethclient.Client, address common.Address, 
 	for _, vLog := range totalLogs {
 		switch vLog.Topics[0].Hex() {
 		case logTransferSigHash.Hex():
-			var transferEvent LogTransfer
+			var transferEvent logTransfer
 			result, err := contractAbi.Unpack("Transfer", vLog.Data)
 			if err != nil {
 				return nil, nil, err
@@ -115,11 +117,10 @@ func marshalJSON(balances map[common.Address]*big.Int, totalSupply *big.Int) map
 	for k, v := range balances {
 		stringMap[k.String()] = v.String()
 	}
-	stringMap["totalSupply"] = totalSupply.String()
 	return stringMap
 }
 
-func unmarshalJSON(jsonMap map[string]string) (map[common.Address]*big.Int, *big.Int, error) {
+func unmarshalJSON(jsonMap map[string]string) (map[common.Address]*big.Int, error) {
 	balMap := make(map[common.Address]*big.Int, len(jsonMap) - 1)
 	for k, v := range jsonMap {
 		if k == totalSupplyKey {
@@ -127,14 +128,10 @@ func unmarshalJSON(jsonMap map[string]string) (map[common.Address]*big.Int, *big
 		}
 		bigInt, ok := big.NewInt(0).SetString(v, 10)
 		if !ok {
-			return nil, nil, fmt.Errorf("could not cast %s to big int", v)
+			return nil, fmt.Errorf("could not cast %s to big int", v)
 		}
 		balMap[common.HexToAddress(k)] = bigInt
 	}
 
-	totalSupply, ok := big.NewInt(0).SetString(jsonMap[totalSupplyKey], 10)
-	if !ok {
-		return nil, nil, fmt.Errorf("could not cast %s to big int", jsonMap[totalSupplyKey])
-	}
-	return balMap, totalSupply, nil
+	return balMap, nil
 }

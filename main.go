@@ -23,6 +23,10 @@ var (
 
 func main() {
 	flag.Parse()
+
+	if *jsonFile == "" {
+		log.Fatal("Expected --json-file to contain a file path")
+	}
 	
 	fullPath, err := expandPath(*jsonFile)
 	if err != nil {

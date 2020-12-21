@@ -62,7 +62,7 @@ func CreateDistributionTree(holderArray []*TokenHolder) (*solTree.MerkleTree, ma
 }
 
 // ArrayFromAddrBalMap takes a string mapping of address -> balance and converts it into an array for sorting and easier usage. 
-func ArrayFromAddrBalMap(stringMap map[string]string) ([]*TokenHolder, error){
+func ArrayFromAddrBalMap(stringMap map[string]string) ([]*TokenHolder, error) {
 	i := 0
 	balArray := make([]*TokenHolder, len(stringMap))
 	for addr, bal := range stringMap {
