@@ -8,13 +8,13 @@ go-merkle-distributor --json-file=/path/to/input.json --output-file=/path/to/out
 ```
 
 ### Structure
-```
+```json
 {
     address: {
         Index: uint64,
         Amount: string,
         Proof: []string (hex-encoded),
-    }
+    },
     root: {
         Proof: [1]string,
     }
@@ -22,7 +22,7 @@ go-merkle-distributor --json-file=/path/to/input.json --output-file=/path/to/out
 ```
 
 ### Helper functions
-```
+```golang
 // CreateDistributionTree uses sol-merkle-tree-go to construct a tree of balance items and returns a 
 // human readable mapping of address to claim info such as the proof, amount, and index. 
 func CreateDistributionTree(holderArray []*TokenHolder) (*solTree.MerkleTree, map[string]ClaimInfo, error)
@@ -38,7 +38,7 @@ func BalancesAndSupplyAtBlock(client *ethclient.Client, tokenAddress common.Addr
 
 
 ## Example input
-```
+```json
 {
     "0xffd342920aD20AE56769b9fC3ba4DD0E5AC75688":"1000000000000000000",
     "0x00dF49020aD20AE56769b9fC341bDD0E5AC75688":"15000000000000000000",
@@ -49,7 +49,7 @@ func BalancesAndSupplyAtBlock(client *ethclient.Client, tokenAddress common.Addr
 
 
 ## Example Output
-```
+```json
 {
     "0x00dF49020AD20Ae56769B9fc341bdd0E5AC75688": {
         "Index": 1,
