@@ -1,6 +1,6 @@
 # Go Merkle Distributor
 
-This repo is a golang implementation that generates the required data for a [MerkleDrop](https://github.com/Uniswap/merkle-distributor/blob/master/contracts/MerkleDistributor.sol). It takes in a JSON of address->balances (both in strings) and writes a file containing the data neccessary for a cliam transaction (index, address, amount, and proof).
+This repo is a golang implementation (using [sol-merkle-tree-go](https://github.com/0xKiwi/sol-merkle-tree-go)) that generates the required data for a [MerkleDrop](https://github.com/Uniswap/merkle-distributor/blob/master/contracts/MerkleDistributor.sol). It takes in a JSON of address->balances (both in strings) and writes a file containing the data neccessary for a cliam transaction (index, address, amount, and proof).
 
 ## Usage
 ```
