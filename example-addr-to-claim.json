@@ -1,0 +1,109 @@
+{
+    "0x00dF49020AD20Ae56769B9fc341bdd0E5AC75688": {
+        "Index": 5,
+        "Amount": "15000000000000000000",
+        "Proof": [
+            "0x3877315ae878ca43652e87cbdb67884eae23f607bc51e26c46a93c718161c776",
+            "0x68ade660169e1250bd6d6862456da7d606830a68ddef1fc8b06e58ac514b517b",
+            "0x2f43db8a747d335356a798e8f9726f2744b4372bd57ea060b5124eefba8629b7",
+            "0xdd573c29aae5ae11d3c1a80af558259ea171e87d9bdb8997b308f5a1e5eabf30"
+        ]
+    },
+    "0x0Fdf46040AD20Ae56769b9Fc3Ba4dD0E5aC75688": {
+        "Index": 9,
+        "Amount": "10000000000000000",
+        "Proof": [
+            "0xca3fb000969bdf2379a41c0e1b1b1055e082bf32ff4da1e5cb7889eab05bf554",
+            "0x1bdb0e151582af1a06e6e58d2bf0fd2aae8ecf0a2f102192b5986cd2c2d95a6f",
+            "0x23c0d0c73d2ac8839d9de3dd1487e16d7b3765546240ae66d77def5ca18e2320",
+            "0xdd573c29aae5ae11d3c1a80af558259ea171e87d9bdb8997b308f5a1e5eabf30"
+        ]
+    },
+    "0x12DF43220d650ae56769b9FC3b4ddD0e5ac75688": {
+        "Index": 4,
+        "Amount": "100000000000000000000",
+        "Proof": [
+            "0x5ef518a5171898a34a9dcf98012adfd8c71468e2d6cbc6cb6a574debb5720d1c",
+            "0xabb2ec4b16d1fc66bbfe6913e841cdf4708e66cfd4080b9e1583557019d777c0",
+            "0x2f43db8a747d335356a798e8f9726f2744b4372bd57ea060b5124eefba8629b7",
+            "0xdd573c29aae5ae11d3c1a80af558259ea171e87d9bdb8997b308f5a1e5eabf30"
+        ]
+    },
+    "0xAFDf41020aD20ae56769B9FC3Ba4DD0e5ac75688": {
+        "Index": 1,
+        "Amount": "21044613231412624494046",
+        "Proof": [
+            "0xf69d82a05b16d521f1e58e48b23121241c6519d1ef5c8b18da1df5d250f84134",
+            "0xf0fa8a73b1e20b8ae62182f48a68d3ff8f9889e7ef0fa45aca841cc63b6a516c",
+            "0xd4e3d7ccf0e489cc62d0ace7df970cc86f9db5d9911cf5f055787e25851cc625",
+            "0x6fc0b1445d6bd030793b209442ff5e4b4328fee132e85d2f99d10babbdb4c274"
+        ]
+    },
+    "0xBFdF40020Ad20aE56769B9fc3Ba4dd0e5Ac75688": {
+        "Index": 3,
+        "Amount": "133400000000000000000",
+        "Proof": [
+            "0x02746c538fb3a8872c0692b48203e936a46c02d0850a229ed55c17a7946a2561",
+            "0x68ade660169e1250bd6d6862456da7d606830a68ddef1fc8b06e58ac514b517b",
+            "0x2f43db8a747d335356a798e8f9726f2744b4372bd57ea060b5124eefba8629b7",
+            "0xdd573c29aae5ae11d3c1a80af558259ea171e87d9bdb8997b308f5a1e5eabf30"
+        ]
+    },
+    "0xCFdF49020ad20ae56769B9fC3Ba4dd0E5ac75688": {
+        "Index": 0,
+        "Amount": "1000043275278275200000000000000",
+        "Proof": [
+            "0x5db391167ca88b1c20063148d5462ff4c9f2ce2f2f08107003a3a449110d6c56",
+            "0xabb2ec4b16d1fc66bbfe6913e841cdf4708e66cfd4080b9e1583557019d777c0",
+            "0x2f43db8a747d335356a798e8f9726f2744b4372bd57ea060b5124eefba8629b7",
+            "0xdd573c29aae5ae11d3c1a80af558259ea171e87d9bdb8997b308f5a1e5eabf30"
+        ]
+    },
+    "0xDfDf43020ad20aE56769b9fc3ba4DD0E5Ac75688": {
+        "Index": 2,
+        "Amount": "1000000000000000000000",
+        "Proof": [
+            "0x8dd24369c219ae037b8a30b63b13f990a99b8fda3bf22a19dc56fa9d127e65cf",
+            "0x36db9a6e860c1957cb748d424fc81fb4528e12422d514877cc2c69d8b75fd34a",
+            "0x23c0d0c73d2ac8839d9de3dd1487e16d7b3765546240ae66d77def5ca18e2320",
+            "0xdd573c29aae5ae11d3c1a80af558259ea171e87d9bdb8997b308f5a1e5eabf30"
+        ]
+    },
+    "0xF5DF46020AD20Ae56769B9fC3Da04D0e5Ac75688": {
+        "Index": 7,
+        "Amount": "1500000000000000000",
+        "Proof": [
+            "0xfc1553fc8240125c86c027a883a173cb7891c4b1cc900ecf2f64cd1d48f7304d",
+            "0xf0fa8a73b1e20b8ae62182f48a68d3ff8f9889e7ef0fa45aca841cc63b6a516c",
+            "0xd4e3d7ccf0e489cc62d0ace7df970cc86f9db5d9911cf5f055787e25851cc625",
+            "0x6fc0b1445d6bd030793b209442ff5e4b4328fee132e85d2f99d10babbdb4c274"
+        ]
+    },
+    "0xFFdFE2C20AD20Ae56769b9fC3bA4DD0e5ac75688": {
+        "Index": 6,
+        "Amount": "2104461272624494046",
+        "Proof": [
+            "0xb00169d0aae37e84c25c2d6042a66e9440a6145182b791bf61f9bae676f844b5",
+            "0x36db9a6e860c1957cb748d424fc81fb4528e12422d514877cc2c69d8b75fd34a",
+            "0x23c0d0c73d2ac8839d9de3dd1487e16d7b3765546240ae66d77def5ca18e2320",
+            "0xdd573c29aae5ae11d3c1a80af558259ea171e87d9bdb8997b308f5a1e5eabf30"
+        ]
+    },
+    "0xffd342920aD20aE56769B9FC3BA4DD0E5AC75688": {
+        "Index": 8,
+        "Amount": "1000000000000000000",
+        "Proof": [
+            "0xef736711f1ca0508f291ce0e12d37931ff0e4757ac6ca9e9f5314b24a513a454",
+            "0x1bdb0e151582af1a06e6e58d2bf0fd2aae8ecf0a2f102192b5986cd2c2d95a6f",
+            "0x23c0d0c73d2ac8839d9de3dd1487e16d7b3765546240ae66d77def5ca18e2320",
+            "0xdd573c29aae5ae11d3c1a80af558259ea171e87d9bdb8997b308f5a1e5eabf30"
+        ]
+    },
+    "root": {
+        "Index": 0,
+        "Amount": "",
+        "Proof": [
+            "0x8f18c9e313036848cbbcb8b34676105ce866ee33bf29d16dee82bd1a8411163d"
+        ]
+    }
+}

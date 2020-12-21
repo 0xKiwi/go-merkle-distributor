@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/binary"
 	"fmt"
 	"math/big"
 	"sort"
@@ -16,45 +15,34 @@ type TokenHolder struct {
 	balance *big.Int
 }
 
-type userInfo struct {
-	index uint64
-	account common.Address
-	amount *big.Int
-}
-
 type ClaimInfo struct {
 	Index  uint64
 	Amount string
 	Proof  []string
 }
 
+// CreateDistributionTree uses sol-merkle-tree-go to construct a tree of balance items and returns a 
+// human readable mapping of address to claim info such as the proof, amount, and index. 
 func CreateDistributionTree(holderArray []*TokenHolder) (*solTree.MerkleTree, map[string]ClaimInfo, error) {
 	sort.Slice(holderArray,  func(i, j int) bool {
 		return holderArray[i].balance.Cmp(holderArray[j].balance) > 0
 	})
-	elements := make([]*userInfo, len(holderArray))
-	for i, holder := range holderArray {
-		elements[i] = &userInfo{
-			index: uint64(i),
-			account: holder.addr,
-			amount: holder.balance,
-		}
+	nodes := make([][]byte, len(holderArray))
+	for i, user := range holderArray {
+		packed := append(
+			uint64To256BytesBigEndian(uint64(i)),
+			append(
+				user.addr.Bytes(),
+				common.LeftPadBytes(user.balance.Bytes(), 32)...,
+			)...,
+		)
+		nodes[i] = crypto.Keccak256(packed)
 	}
 
-	nodes := make([][]byte, len(elements))
-	for i, user := range elements {
-		// TODO: this needs to be padded to 256 bits.
-		indexBytes := uint64ToBytesLittleEndian(user.index)
-		accountBytes := user.account.Bytes()
-		amountBytes := user.amount.Bytes()
-		nodes[i] = crypto.Keccak256(indexBytes, accountBytes, amountBytes)
-	}
-
-	tree, err := solTree.GenerateTreeFromItems(nodes)
+	tree, err := solTree.GenerateTreeFromHashedItems(nodes)
 	if err != nil {
 		return nil, nil, fmt.Errorf("could not generate trie: %v", err)
 	}
-	//distributionRoot := tree.Root()
 
 	addrToProof := make(map[string]ClaimInfo, len(holderArray))
 	for i, holder := range holderArray {
@@ -68,50 +56,25 @@ func CreateDistributionTree(holderArray []*TokenHolder) (*solTree.MerkleTree, ma
 			Proof:  stringArrayFrom2DBytes(proof),
 		}
 	}
+	distributionRoot := tree.Root()
+	addrToProof["root"] = ClaimInfo{Proof: []string{fmt.Sprintf("%#x", distributionRoot)}}
 	return tree, addrToProof, nil
 }
 
-func stringArrayFrom2DBytes(bytes2d [][]byte) []string {
-	stringArray := make([]string, len(bytes2d))
-	for i, bytes := range bytes2d {
-		stringArray[i] = fmt.Sprintf("%#x", bytes)
+// ArrayFromAddrBalMap takes a string mapping of address -> balance and converts it into an array for sorting and easier usage. 
+func ArrayFromAddrBalMap(stringMap map[string]string) ([]*TokenHolder, error){
+	i := 0
+	balArray := make([]*TokenHolder, len(stringMap))
+	for addr, bal := range stringMap {
+		bigInt, ok := big.NewInt(0).SetString(bal, 10)
+		if !ok {
+			return nil, fmt.Errorf("could not cast %s to big int", bal)
+		}
+		balArray[i] = &TokenHolder{
+			addr: common.HexToAddress(addr),
+			balance: bigInt,
+		}
+		i++
 	}
-	return stringArray
+	return balArray, nil
 }
-
-func bytes2DFromStringArray(strings []string) [][]byte {
-	bytesArray := make([][]byte, len(strings))
-	for i, ss := range strings {
-		bytesArray[i] = common.HexToHash(ss).Bytes()
-	}
-	return bytesArray
-}
-
-func uint64ToBytesLittleEndian(i uint64) []byte {
-	buf := make([]byte, 8)
-	binary.LittleEndian.PutUint64(buf, i)
-	return buf
-}
-
-func uint64To256BytesLittleEndian(i uint64) []byte {
-	buf := make([]byte, 32)
-	PutUint64Padded(buf, i)
-	return buf
-}
-
-func PutUint64Padded(b []byte, v uint64) {
-	_ = b[31] // early bounds check to guarantee safety of writes below
-	b[0] = byte(v)
-	b[1] = byte(v >> 8)
-	b[2] = byte(v >> 16)
-	b[3] = byte(v >> 24)
-	b[4] = byte(v >> 32)
-	b[5] = byte(v >> 40)
-	b[6] = byte(v >> 48)
-	b[7] = byte(v >> 56)
-	for i := 8; i < len(b); i++ {
-		b[i] = byte(0)
-	}
-}
-
-

@@ -8,7 +8,6 @@ import (
 	"log"
 	"math/big"
 	"os"
-	"path/filepath"
 
 	"github.com/ethereum/go-ethereum/common"
 )
@@ -17,11 +16,9 @@ import (
 var zeroAddr = common.HexToAddress("0x0000000000000000000000000000000000000000")
 var safe1Address = common.HexToAddress("0x1Aa61c196E76805fcBe394eA00e4fFCEd24FC469")
 
-var savedDataFileName = filepath.Join("output", "saved-balances-and-supply.json")
-var addrToClaimFileName = filepath.Join("output", "addr-to-claim.json")
-
 var (
 	jsonFile = flag.String("json-file", "", "JSON file of addresses to balances in wei")
+	outputFile = flag.String("output-file", "addr-to-claim.json", "JSON file of addresses to claiming info")
 )
 
 func main() {
@@ -39,25 +36,15 @@ func main() {
 	if err := json.Unmarshal(jsonBytes, &stringJson); err != nil {
 		log.Fatalf("Could not unmarshal json: %v", err)
 	}
-
-	i := 0
-	balArray := make([]*TokenHolder, len(stringJson))
-	for addr, bal := range stringJson {
-		bigInt, ok := big.NewInt(0).SetString(bal, 10)
-		if !ok {
-			log.Fatalf("could not cast %s to big int", bal)
-		}
-		balArray[i] = &TokenHolder{
-			addr: common.HexToAddress(addr),
-			balance: bigInt,
-		}
-		i++
+	balArray, err := ArrayFromAddrBalMap(stringJson)
+	if err != nil {
+		log.Fatalf("Could not get array from string map json")
 	}
 	_, addrToClaim, err := CreateDistributionTree(balArray)
 	if err != nil {
 		log.Fatalf("Could not create distribution tree: %v", err)
 	}
-	if _, err := createFile(addrToClaimFileName, addrToClaim); err != nil {
+	if _, err := createFile(*outputFile, addrToClaim); err != nil {
 		log.Fatalf("Could not create file: %v", err)
 	}
 }
