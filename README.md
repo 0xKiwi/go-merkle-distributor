@@ -7,20 +7,6 @@ This repo is a golang implementation that generates the required data for a [Mer
 go-merkle-distributor --json-file=/path/to/input.json --output-file=/path/to/output.json
 ```
 
-### Structure
-```json
-{
-    address: {
-        Index: uint64,
-        Amount: string,
-        Proof: []string (hex-encoded),
-    },
-    root: {
-        Proof: [1]string,
-    }
-}
-```
-
 ### Helper functions
 ```golang
 // CreateDistributionTree uses sol-merkle-tree-go to construct a tree of balance items and returns a 
