@@ -32,6 +32,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Could not expand path: %v", err)
 	}
+	log.Printf("Generating claim info for %s\n", fullPath)
 	jsonBytes, err := ioutil.ReadFile(fullPath)
 	if err != nil {
 		log.Fatalf("Could not read file: %v", err)
@@ -48,9 +49,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("Could not create distribution tree: %v", err)
 	}
+	log.Printf("Root: %#x\n", addrToClaim["root"].Proof[0])
 	if _, err := createFile(*outputFile, addrToClaim); err != nil {
 		log.Fatalf("Could not create file: %v", err)
 	}
+	log.Printf("Created claim info file at %s\n", *outputFile)
 }
 
 func unmarshalJSON(jsonMap map[string]string) (map[common.Address]*big.Int, error) {
