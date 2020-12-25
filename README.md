@@ -7,6 +7,14 @@ This repo is a golang implementation (using [sol-merkle-tree-go](https://github.
 go-merkle-distributor --json-file=/path/to/input.json --output-file=/path/to/output.json
 ```
 
+## Example output 
+```
+./go-merkle-distributor --json-file=example-balances.json
+2020/12/25 01:27:55 Generating claim info for /home/kiwi/Work/tools/go-merkle-distributor/example-balances.json
+2020/12/25 01:27:55 Root: 0x8f18c9e313036848cbbcb8b34676105ce866ee33bf29d16dee82bd1a8411163d
+2020/12/25 01:27:55 Created claim info file at addr-to-claim.json
+```
+
 ### Helper functions
 ```golang
 // CreateDistributionTree uses sol-merkle-tree-go to construct a tree of balance items and returns a 
