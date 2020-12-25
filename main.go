@@ -49,7 +49,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Could not create distribution tree: %v", err)
 	}
-	log.Printf("Root: %#x\n", addrToClaim["root"].Proof[0])
+	log.Printf("Root: %s\n", addrToClaim["root"].Proof[0])
 	if _, err := createFile(*outputFile, addrToClaim); err != nil {
 		log.Fatalf("Could not create file: %v", err)
 	}
