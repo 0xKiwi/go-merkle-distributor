@@ -15,25 +15,32 @@ type TokenHolder struct {
 	balance *big.Int
 }
 
+type TokenMetadata struct {
+	Id *big.Int
+	Metadata *big.Int
+}
+
 type ClaimInfo struct {
-	Index  uint64
-	Amount string
+	Id  uint64
+	Metadata string
 	Proof  []string
 }
 
+var contractAddr = common.HexToAddress("0xF75140376D246D8B1E5B8a48E3f00772468b3c0c")
+
 // CreateDistributionTree uses sol-merkle-tree-go to construct a tree of balance items and returns a 
 // human readable mapping of address to claim info such as the proof, amount, and index. 
-func CreateDistributionTree(holderArray []*TokenHolder) (*solTree.MerkleTree, map[string]ClaimInfo, error) {
+func CreateDistributionTree(holderArray []*TokenMetadata) (*solTree.MerkleTree, map[string]ClaimInfo, error) {
 	sort.Slice(holderArray,  func(i, j int) bool {
-		return holderArray[i].balance.Cmp(holderArray[j].balance) > 0
+		return holderArray[i].Id.Cmp(holderArray[j].Id) > 0
 	})
 	nodes := make([][]byte, len(holderArray))
 	for i, user := range holderArray {
 		packed := append(
-			uint64To256BytesBigEndian(uint64(i)),
+			contractAddr.Bytes(),
 			append(
-				user.addr.Bytes(),
-				common.LeftPadBytes(user.balance.Bytes(), 32)...,
+				common.LeftPadBytes(user.Id.Bytes(), 32),
+				common.LeftPadBytes(user.Metadata.Bytes(), 32)...,
 			)...,
 		)
 		nodes[i] = crypto.Keccak256(packed)
@@ -50,9 +57,9 @@ func CreateDistributionTree(holderArray []*TokenHolder) (*solTree.MerkleTree, ma
 		if err != nil {
 			return nil, nil, fmt.Errorf("could not generate proof: %v", err)
 		}
-		addrToProof[holder.addr.String()] = ClaimInfo{
-			Index:  uint64(i),
-			Amount: holder.balance.String(),
+		addrToProof[holder.Id.String()] = ClaimInfo{
+			Id:  uint64(i),
+			Metadata: holder.Metadata.String(),
 			Proof:  stringArrayFrom2DBytes(proof),
 		}
 	}
@@ -61,20 +68,21 @@ func CreateDistributionTree(holderArray []*TokenHolder) (*solTree.MerkleTree, ma
 	return tree, addrToProof, nil
 }
 
-// ArrayFromAddrBalMap takes a string mapping of address -> balance and converts it into an array for sorting and easier usage. 
-func ArrayFromAddrBalMap(stringMap map[string]string) ([]*TokenHolder, error) {
+func MetadataFromJSON(stringMap map[string]string) ([]*TokenMetadata, error) {
 	i := 0
-	balArray := make([]*TokenHolder, len(stringMap))
-	for addr, bal := range stringMap {
-		bigInt, ok := big.NewInt(0).SetString(bal, 10)
+	dataArray := make([]*TokenMetadata, len(stringMap))
+	for tokenId, metadata := range stringMap {
+		bytes := common.Hex2Bytes(metadata[2:])
+		tokenBig, ok := big.NewInt(0).SetString(tokenId, 10)
 		if !ok {
-			return nil, fmt.Errorf("could not cast %s to big int", bal)
+			return nil, fmt.Errorf("could not cast %s to big int", tokenBig)
 		}
-		balArray[i] = &TokenHolder{
-			addr: common.HexToAddress(addr),
-			balance: bigInt,
+		metadataBig := big.NewInt(0).SetBytes(bytes)
+		dataArray[i] = &TokenMetadata{
+			Id: tokenBig,
+			Metadata: metadataBig,
 		}
 		i++
 	}
-	return balArray, nil
+	return dataArray, nil
 }
