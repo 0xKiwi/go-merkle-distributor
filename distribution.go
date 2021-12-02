@@ -26,7 +26,7 @@ type ClaimInfo struct {
 	Proof  []string
 }
 
-var contractAddr = common.HexToAddress("0xF75140376D246D8B1E5B8a48E3f00772468b3c0c")
+var contractAddr = common.HexToAddress("0x1F64F0f5411c73B9323a788C314737E899553a98") //"0xF75140376D246D8B1E5B8a48E3f00772468b3c0c")
 
 // CreateDistributionTree uses sol-merkle-tree-go to construct a tree of balance items and returns a 
 // human readable mapping of address to claim info such as the proof, amount, and index. 
@@ -37,10 +37,10 @@ func CreateDistributionTree(holderArray []*TokenMetadata) (*solTree.MerkleTree, 
 	nodes := make([][]byte, len(holderArray))
 	for i, user := range holderArray {
 		packed := append(
-			contractAddr.Bytes(),
+			common.LeftPadBytes(contractAddr.Bytes(), 20),
 			append(
 				common.LeftPadBytes(user.Id.Bytes(), 32),
-				common.LeftPadBytes(user.Metadata.Bytes(), 32)...,
+				common.RightPadBytes(user.Metadata.Bytes(), 32)...,
 			)...,
 		)
 		nodes[i] = crypto.Keccak256(packed)
@@ -58,8 +58,8 @@ func CreateDistributionTree(holderArray []*TokenMetadata) (*solTree.MerkleTree, 
 			return nil, nil, fmt.Errorf("could not generate proof: %v", err)
 		}
 		addrToProof[holder.Id.String()] = ClaimInfo{
-			Id:  uint64(i),
-			Metadata: holder.Metadata.String(),
+			Id:  holder.Id.Uint64(),
+			Metadata: big.NewInt(0).SetBytes(common.RightPadBytes(holder.Metadata.Bytes(), 32)).String(),
 			Proof:  stringArrayFrom2DBytes(proof),
 		}
 	}

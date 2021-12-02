@@ -263,13 +263,25 @@ var attributes = map[string][]string{
 	"Mouth": mouths,
 }
 
+var keyOrder = []string{
+	"Background",
+	"Skin",
+	"Outfit",
+	"Right Accessory",
+	"Left Accessory",
+	"Hair",
+	"Hat",
+	"Eyes",
+	"Mouth",
+}
+
 func allMetadataToUint256(allMetadata []map[string]string) map[string]string {
+	fmt.Println(len(allMetadata))
 	allMetadataUint := make(map[string]string, len(allMetadata))
 	for i, metadatum := range allMetadata {
 		totalData := make([]byte, 0, len(metadatum))
-		for key, value := range metadatum {
-			dataId := findIndexIn(attributes[key], value)
-			fmt.Printf("%s: %s into key %d: %#x\n", key, value, dataId, totalData)
+		for _, key := range keyOrder {
+			dataId := findIndexIn(attributes[key], metadatum[key])
 			if dataId == -1 {
 				log.Fatal(dataId)
 			}
