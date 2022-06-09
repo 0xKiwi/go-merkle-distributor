@@ -16,7 +16,6 @@ type TokenHolder struct {
 }
 
 type ClaimInfo struct {
-	Index  uint64
 	Amount string
 	Proof  []string
 }
@@ -30,11 +29,8 @@ func CreateDistributionTree(holderArray []*TokenHolder) (*solTree.MerkleTree, ma
 	nodes := make([][]byte, len(holderArray))
 	for i, user := range holderArray {
 		packed := append(
-			uint64To256BytesBigEndian(uint64(i)),
-			append(
-				user.addr.Bytes(),
-				common.LeftPadBytes(user.balance.Bytes(), 32)...,
-			)...,
+			user.addr.Bytes(),
+			common.LeftPadBytes(user.balance.Bytes(), 32)...,
 		)
 		nodes[i] = crypto.Keccak256(packed)
 	}
@@ -51,7 +47,6 @@ func CreateDistributionTree(holderArray []*TokenHolder) (*solTree.MerkleTree, ma
 			return nil, nil, fmt.Errorf("could not generate proof: %v", err)
 		}
 		addrToProof[holder.addr.String()] = ClaimInfo{
-			Index:  uint64(i),
 			Amount: holder.balance.String(),
 			Proof:  stringArrayFrom2DBytes(proof),
 		}
